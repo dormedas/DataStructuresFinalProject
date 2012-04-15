@@ -64,6 +64,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DataLoader.h" />
+    <ClInclude Include="Itemset.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DataLoader.cpp" />
+    <ClCompile Include="Itemset.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

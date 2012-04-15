@@ -4,32 +4,32 @@
 Itemset::Itemset(int size)
 {
 	mArrSize = size;
-	mTransactionArray = new int(mArrSize);
+	mItemArray = new int[mArrSize];
 	mIndex = 0;
 }
 
-
 Itemset::~Itemset()
 {
+	delete [] mItemArray;
 }
 
 // 
 
-bool Itemset::inItemset(int transaction)
+bool Itemset::inItemset(int item)
 {
 	for(int i = 0; i < mArrSize; i++)
 	{
-		if(mTransactionArray[i] == transaction)
+		if(mItemArray[i] == item)
 			return true;
 	}
 	return false;
 }
 
-void Itemset::add(int transaction)
+void Itemset::add(int item)
 {
-	if(mIndex <= mArrSize)
+	if(mIndex < mArrSize)
 	{
-		mTransactionArray[mIndex] = transaction;
+		mItemArray[mIndex] = item;
 		mIndex++;
 	}
 	else
@@ -40,11 +40,11 @@ void Itemset::add(int transaction)
 
 void Itemset::displayAll()
 {
-	for(int i = 0; i < mArrSize; i++)
+	for(int i = 0; i < mIndex; i++)
 	{
-		std::cout << mTransactionArray[i];
+		std::cout << mItemArray[i];
 		// Display comma except after last item
-		if(i < mArrSize - 1)
+		if(i < mIndex - 1)
 			std::cout << ", ";
 	}
 }

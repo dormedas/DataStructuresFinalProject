@@ -5,11 +5,11 @@ class Itemset
 public:
 	Itemset(int size);
 	~Itemset();
-	bool inItemset(int transaction);
-	void add(int transaction);
+	bool inItemset(int item);
+	void add(int item);
 	void displayAll();
 private:
-	int *mTransactionArray;
+	int *mItemArray;
 	int mArrSize;
 	int mIndex;
 };
