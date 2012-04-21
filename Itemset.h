@@ -3,13 +3,15 @@
 class Itemset
 {
 public:
+	Itemset();
 	Itemset(int size);
 	~Itemset();
 	bool inItemset(int item);
+	bool isEmpty();
 	void add(int item);
 	void displayAll();
 private:
-	int *mItemArray;
+	short *mItemArray;
 	int mArrSize;
 	int mIndex;
 };

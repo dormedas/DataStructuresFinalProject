@@ -1,27 +1,44 @@
 #include <iostream>
 #include "Itemset.h"
+#include "SetHolder.h"
 #include "DataLoader.h"
 
 int main()
 {
-	Itemset* tranArr[10];
+	int transactionNum = 0;
+	{
+		int itemNum;
+		ifstream fin("dataset/T5.N0.5K.D2K.ibm.input");
+		fin >> itemNum;
+		fin >> transactionNum;
+		fin.close();
+	}
+	SetHolder tranArr(transactionNum);
+	//Itemset** tranArr = new Itemset*[transactionNum];
 	DataLoader dataLoader("dataset/T5.N0.5K.D2K.ibm.dat");
-	for(int i = 0; i < 10; i++)
+	for(int i = 0; i < transactionNum; i++)
 	{
-		tranArr[i] = dataLoader.readLine();
+		tranArr.add(dataLoader.readLine());
 	}
-	for(int i = 0; i < 10; i++)
-	{
-		tranArr[i]->displayAll();
-		cout << endl;
-	}
-	/*
-	Itemset set(5);
-	set.add(4);
-	set.add(3);
-	set.displayAll();
-	*/
+	tranArr.displayAll();
 
+	//APRIORI
+	SetHolder frequentItems(75);
+
+	SetHolder candidates(50);
+	int k = 1;
+	do
+	{
+		if(k == 1)
+		{
+			for(int i = 0; i < transactionNum; i++)
+			{
+				//Itemset* transaction = tranArr[i];
+
+			}
+		}
+		k++;
+	} while (!candidates.isEmpty());
 	// Pause
 	std::cin.get();
 }

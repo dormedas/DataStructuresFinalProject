@@ -1,10 +1,17 @@
 #include <iostream>
 #include "Itemset.h"
 
+Itemset::Itemset()
+{
+	mArrSize = 10;
+	mItemArray = new short[mArrSize];
+	mIndex = 0;
+}
+
 Itemset::Itemset(int size)
 {
 	mArrSize = size;
-	mItemArray = new int[mArrSize];
+	mItemArray = new short[mArrSize];
 	mIndex = 0;
 }
 
@@ -27,15 +34,20 @@ bool Itemset::inItemset(int item)
 
 void Itemset::add(int item)
 {
-	if(mIndex < mArrSize)
+	if(mIndex >= mArrSize)
 	{
-		mItemArray[mIndex] = item;
-		mIndex++;
+		int oldSize = mArrSize;
+		mArrSize = ceil(mArrSize * 1.5);
+		short* tmpArr = new short[mArrSize];
+		for(int i = 0; i < oldSize; i++)
+		{
+			tmpArr[i] = mItemArray[i];
+		}
+		delete[] mItemArray;
+		mItemArray = tmpArr;
 	}
-	else
-	{
-		throw 5; // Just tell us it failed.
-	}
+	mItemArray[mIndex] = item;
+	mIndex++;
 }
 
 void Itemset::displayAll()
@@ -47,4 +59,12 @@ void Itemset::displayAll()
 		if(i < mIndex - 1)
 			std::cout << ", ";
 	}
+}
+
+bool Itemset::isEmpty()
+{
+	if(mIndex <= 0)
+		return true;
+	else
+		return false;
 }
