@@ -43,14 +43,14 @@ int main()
 	int transactionNum = 0;
 	{
 		int itemNum;
-		ifstream fin("dataset/T5.N0.5K.D2K.ibm.input"); // T5.N0.5K.D2K.ibm
+		ifstream fin("dataset/test.input"); // T5.N0.5K.D2K.ibm
 		fin >> itemNum;
 		fin >> transactionNum;
 		fin.close();
 	}
 	SetHolder tranArr(transactionNum);
 	//Itemset** tranArr = new Itemset*[transactionNum];
-	DataLoader dataLoader("dataset/T5.N0.5K.D2K.ibm.dat");
+	DataLoader dataLoader("dataset/test.dat");
 	for(int i = 0; i < transactionNum; i++)
 	{
 		tranArr.add(dataLoader.readLine());
@@ -100,7 +100,7 @@ int main()
 		{
 			for(int i = 0; i < frequentItems.size(); i++)
 			{
-				for (int j = i + 1; j < frequentItems.size() - (i + 1); j++)
+				for (int j = i + 1; j < frequentItems.size(); j++)
 				{
 					Itemset* newSet = new Itemset(k);
 					newSet->add(frequentItems.get(i)->get(0));
