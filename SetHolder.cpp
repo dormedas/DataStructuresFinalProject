@@ -114,3 +114,11 @@ short SetHolder::remove(short index)
 	mIndex--;
 	return index - 1;
 }
+
+void SetHolder::clear()
+{
+	delete[] mArray;
+	mArray = new Itemset*[30];
+	mIndex = 0;
+	mSize = 30;
+}

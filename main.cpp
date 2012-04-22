@@ -30,7 +30,7 @@ bool prune(SetHolder* tranArr, Itemset* kSet, int transactionCount)
 		}
 	}
 	double support = (double)count / (double)transactionCount;
-	cout << number << ": " << support << endl;
+	//cout << number << ": " << support << endl;
 	if(support >= MINSUP)
 	{
 		return false;
@@ -98,30 +98,31 @@ int main()
 		}
 		else if(k == 2)
 		{
-			for(int i = 0; i < tranArr.size(); i++)
+			for(int i = 0; i < frequentItems.size(); i++)
 			{
-				Itemset* transaction = tranArr.get(i);
-				if(transaction == NULL)
+				for (int j = i + 1; j < frequentItems.size() - (i + 1); j++)
 				{
-					continue;
+					Itemset* newSet = new Itemset(k);
+					newSet->add(frequentItems.get(i)->get(0));
+					newSet->add(frequentItems.get(j)->get(0));
+					candidates.add(newSet);
 				}
-				for(int j = 0; j < transaction->size(); j++)
+			}
+			break;//DEBUG
+			for(int i = 0; i < candidates.size(); i++)
+			{
+				if(prune(&tranArr, candidates.get(i), transactionNum))
 				{
-					short num = transaction->get(j);
-					if(num == -1)
-					{
-						continue;
-					}
-					if(!candidates.inSetHolder(num))
-					{
-						Itemset* newSet = new Itemset(1);
-						newSet->add(transaction->get(j));
-						candidates.add(newSet);
-					}
+					i = candidates.remove(i);
 				}
 			}
 		}
-		break; // DEBUG
+		for (int i = 0; i < candidates.size(); i++)
+		{
+			frequentItems.add(candidates.get(i));
+		}
+		candidates.clear();
+		//break; // DEBUG
 		k++;
 	} while (!candidates.isEmpty());
 

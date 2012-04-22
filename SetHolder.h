@@ -15,6 +15,7 @@ public:
 	Itemset* get(short index);
 	bool inSetHolder(int item);
 	short remove(short index);
+	void clear();
 private:
 	Itemset** mArray;
 	short mSize;
