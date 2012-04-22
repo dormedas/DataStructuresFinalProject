@@ -68,3 +68,15 @@ bool Itemset::isEmpty()
 	else
 		return false;
 }
+
+int Itemset::get(int index)
+{
+	if(index < mArrSize)
+	{
+		return mItemArray[index];
+	}
+	else
+	{
+		return -1;
+	}
+}

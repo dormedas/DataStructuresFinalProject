@@ -3,12 +3,47 @@
 #include "SetHolder.h"
 #include "DataLoader.h"
 
+#define MINSUP 0.025
+
+bool prune(SetHolder* tranArr, Itemset* kSet, int transactionCount)
+{
+	int count = 0;
+	int number = -1; // DEBUG
+	for(int i = 0; i < tranArr->size(); i++)
+	{
+		Itemset* transaction = tranArr->get(i);
+		if(transaction != NULL)
+		{
+			bool allGood = true;
+			for(int j = 0; j < kSet->size(); j++)
+			{
+				number = kSet->get(j);
+				if(!transaction->inItemset(kSet->get(j)))
+				{
+					allGood = false;
+				}
+			}
+			if(allGood)
+			{
+				count++;
+			}
+		}
+	}
+	double support = (double)count / (double)transactionCount;
+	cout << number << ": " << support << endl;
+	if(support >= MINSUP)
+	{
+		return false;
+	}
+	return true;
+}
+
 int main()
 {
 	int transactionNum = 0;
 	{
 		int itemNum;
-		ifstream fin("dataset/T5.N0.5K.D2K.ibm.input");
+		ifstream fin("dataset/T5.N0.5K.D2K.ibm.input"); // T5.N0.5K.D2K.ibm
 		fin >> itemNum;
 		fin >> transactionNum;
 		fin.close();
@@ -20,7 +55,7 @@ int main()
 	{
 		tranArr.add(dataLoader.readLine());
 	}
-	tranArr.displayAll();
+	//tranArr.displayAll();
 
 	//APRIORI
 	SetHolder frequentItems(75);
@@ -31,14 +66,66 @@ int main()
 	{
 		if(k == 1)
 		{
-			for(int i = 0; i < transactionNum; i++)
+			for(int i = 0; i < tranArr.size(); i++)
 			{
-				//Itemset* transaction = tranArr[i];
-
+				Itemset* transaction = tranArr.get(i);
+				if(transaction == NULL)
+				{
+					continue;
+				}
+				for(int j = 0; j < transaction->size(); j++)
+				{
+					short num = transaction->get(j);
+					if(num == -1)
+					{
+						continue;
+					}
+					if(!candidates.inSetHolder(num))
+					{
+						Itemset* newSet = new Itemset(1);
+						newSet->add(transaction->get(j));
+						candidates.add(newSet);
+					}
+				}
+			}
+			for(int i = 0; i < candidates.size(); i++)
+			{
+				if(prune(&tranArr, candidates.get(i), transactionNum))
+				{
+					i = candidates.remove(i);
+				}
 			}
 		}
+		else if(k == 2)
+		{
+			for(int i = 0; i < tranArr.size(); i++)
+			{
+				Itemset* transaction = tranArr.get(i);
+				if(transaction == NULL)
+				{
+					continue;
+				}
+				for(int j = 0; j < transaction->size(); j++)
+				{
+					short num = transaction->get(j);
+					if(num == -1)
+					{
+						continue;
+					}
+					if(!candidates.inSetHolder(num))
+					{
+						Itemset* newSet = new Itemset(1);
+						newSet->add(transaction->get(j));
+						candidates.add(newSet);
+					}
+				}
+			}
+		}
+		break; // DEBUG
 		k++;
 	} while (!candidates.isEmpty());
+
+	candidates.displayAll();
 	// Pause
 	std::cin.get();
 }
