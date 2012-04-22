@@ -19,7 +19,7 @@ SetHolder::~SetHolder()
 
 void SetHolder::deleteData()
 {
-	for(short i = 0; i < mSize; i++)
+	for(int i = 0; i < mSize; i++)
 	{
 		delete [] mArray[i];
 	}
@@ -29,8 +29,8 @@ void SetHolder::add(Itemset* itemset)
 {
 	if(mIndex == mSize)
 	{
-		short oldSize = mSize;
-		mSize = ceil(mSize * 1.5);
+		int oldSize = mSize;
+		mSize = ceil(mSize * 1.05);
 		Itemset** tmpArr = new Itemset*[mSize];
 		for(int i = 0; i < mSize; i++)
 		{
@@ -49,7 +49,7 @@ void SetHolder::add(Itemset* itemset)
 
 void SetHolder::displayAll()
 {
-	for(short i = 0; i < mIndex; i++)
+	for(int i = 0; i < mIndex; i++)
 	{
 		mArray[i]->displayAll();
 		std::cout << std::endl;
@@ -68,7 +68,7 @@ bool SetHolder::isEmpty()
 	}
 }
 
-Itemset* SetHolder::get(short index)
+Itemset* SetHolder::get(int index)
 {
 	if(index < mSize)
 	{
@@ -96,7 +96,7 @@ bool SetHolder::inSetHolder(int item)
 	return false;
 }
 
-short SetHolder::remove(short index)
+int SetHolder::remove(int index)
 {
 	if(index > mIndex)
 	{

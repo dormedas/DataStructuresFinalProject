@@ -37,7 +37,7 @@ void Itemset::add(int item)
 	if(mIndex >= mArrSize)
 	{
 		int oldSize = mArrSize;
-		mArrSize = ceil(mArrSize * 1.5);
+		mArrSize = ceil(mArrSize * 1.05);
 		short* tmpArr = new short[mArrSize];
 		for(int i = 0; i < oldSize; i++)
 		{

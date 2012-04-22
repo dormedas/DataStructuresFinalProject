@@ -10,14 +10,14 @@ public:
 	void deleteData();
 	void add(Itemset* itemset);
 	void displayAll();
-	short size() { return mIndex; }
+	int size() { return mIndex; }
 	bool isEmpty();
-	Itemset* get(short index);
+	Itemset* get(int index);
 	bool inSetHolder(int item);
-	short remove(short index);
+	int remove(int index);
 	void clear();
 private:
 	Itemset** mArray;
-	short mSize;
-	short mIndex;
+	int mSize;
+	int mIndex;
 };
