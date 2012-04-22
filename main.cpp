@@ -4,7 +4,7 @@
 #include "DataLoader.h"
 #include "TimerSystem.h"
 
-#define MINSUP 0.0075
+#define MINSUP 0.0025
 
 bool prune(SetHolder* tranArr, Itemset* kSet, int transactionCount)
 {
@@ -116,6 +116,52 @@ int main()
 			}
 			//break;//DEBUG
 			cout << "Pruning 2-itemsets." << endl;
+			for(int i = 0; i < candidates.size(); i++)
+			{
+				if(prune(&tranArr, candidates.get(i), transactionNum))
+				{
+					i = candidates.remove(i);
+				}
+			}
+			//break;
+		}
+		else if(k == 3)
+		{
+			cout << "Commencing 3-itemsets." << endl;
+			// THE MOST BULLSHIT SOLUTION KNOWN TO MAN.
+			int n = -1, 
+				m = -1, 
+				l = -1;
+			for(int i = frequentItems.getSetStart(2); i < frequentItems.size(); i++)
+			{
+				n = frequentItems.get(i)->get(0);
+				m = frequentItems.get(i)->get(1);
+				//bool allGood = true;
+				for(int j = frequentItems.getSetStart(2); j < frequentItems.size(); j++)
+				{
+					if(frequentItems.get(j)->get(0) == m)
+					{
+						l = frequentItems.get(j)->get(1);
+					}
+					if(l != -1)
+					{
+						for(int k = i; frequentItems.get(k)->get(0) == n; k++)
+						{
+							if(frequentItems.get(k)->get(1) == l)
+							{
+								Itemset* newSet = new Itemset(k);
+								newSet->add(n);
+								newSet->add(m);
+								newSet->add(l);
+								candidates.add(newSet);
+							}
+						}
+					}
+					l = -1;
+				}
+			}
+			//break;//DEBUG
+			cout << "Pruning 3-itemsets." << endl;
 			for(int i = 0; i < candidates.size(); i++)
 			{
 				if(prune(&tranArr, candidates.get(i), transactionNum))

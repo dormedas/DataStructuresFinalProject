@@ -122,3 +122,15 @@ void SetHolder::clear()
 	mIndex = 0;
 	mSize = 30;
 }
+
+int SetHolder::getSetStart(int k)
+{
+	for(int i = 0; i < mIndex; i++)
+	{
+		if(mArray[i]->size() == k)
+		{
+			return i;
+		}
+	}
+	return 0;
+}

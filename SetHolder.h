@@ -16,6 +16,7 @@ public:
 	bool inSetHolder(int item);
 	int remove(int index);
 	void clear();
+	int getSetStart(int k);
 private:
 	Itemset** mArray;
 	int mSize;
