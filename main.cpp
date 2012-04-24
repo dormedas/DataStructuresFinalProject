@@ -72,6 +72,7 @@ int main()
 {
 	TimerSystem timer;
 	int transactionNum = 0;
+	ofstream fout("Logger.dat");
 	{
 		int itemNum;
 		ifstream fin("dataset/T5.N0.5K.D2K.ibm.input"); // T5.N0.5K.D2K.ibm
@@ -98,7 +99,7 @@ int main()
 	{
 		if(k == 1)
 		{
-			cout << "Commencing 1-itemsets." << endl;
+			std::cout << "Commencing 1-itemsets." << endl;
 			for(int i = 0; i < tranArr.size(); i++)
 			{
 				Itemset* transaction = tranArr.get(i);
@@ -121,7 +122,7 @@ int main()
 					}
 				}
 			}
-			cout << "Pruning 1-itemsets." << endl;
+			std::cout << "Pruning 1-itemsets." << endl;
 			for(int i = 0; i < candidates.size(); i++)
 			{
 				if(prune(&tranArr, candidates.get(i), transactionNum))
@@ -132,7 +133,7 @@ int main()
 		}
 		else if(k == 2)
 		{
-			cout << "Commencing 2-itemsets." << endl;
+			std::cout << "Commencing 2-itemsets." << endl;
 			for(int i = 0; i < frequentItems.size(); i++)
 			{
 				for (int j = i + 1; j < frequentItems.size(); j++)
@@ -144,7 +145,7 @@ int main()
 				}
 			}
 			//break;//DEBUG
-			cout << "Pruning 2-itemsets." << endl;
+			std::cout << "Pruning 2-itemsets." << endl;
 			for(int i = 0; i < candidates.size(); i++)
 			{
 				if(prune(&tranArr, candidates.get(i), transactionNum))
@@ -156,7 +157,7 @@ int main()
 		}
 		else if(k == 3)
 		{
-			cout << "Commencing 3-itemsets." << endl;
+			std::cout << "Commencing 3-itemsets." << endl;
 			// THE MOST BULLSHIT SOLUTION KNOWN TO MAN.
 			int n = -1, 
 				m = -1, 
@@ -190,7 +191,7 @@ int main()
 				}
 			}
 			//break;//DEBUG
-			cout << "Pruning 3-itemsets." << endl;
+			std::cout << "Pruning 3-itemsets." << endl;
 			for(int i = 0; i < candidates.size(); i++)
 			{
 				if(prune(&tranArr, candidates.get(i), transactionNum))
@@ -199,7 +200,7 @@ int main()
 				}
 			}
 			candidates.displayAll();
-			cout << "Here:\n";
+			std::cout << "Here:\n";
 			for(int i = 0; i < candidates.size(); i++)
 			{
 				if(checkApriori(candidates.get(i), &frequentItems))
@@ -207,22 +208,37 @@ int main()
 					i = candidates.remove(i);
 				}
 			}
-			cout << "Done:\n";
+			std::cout << "Done:\n";
 			break;
 		}
 		for (int i = 0; i < candidates.size(); i++)
 		{
 			frequentItems.add(candidates.get(i));
 		}
+
+		fout << "K = " << k << endl;
+		fout << "Total Datasets: " << frequentItems.size() << endl;
+		fout << "Time Taken: " << endl;
+		for(int i = 0; i < frequentItems.size(); i++)
+		{
+			for(int j = 0; j < frequentItems.get(i)->size(); j++)
+			{
+				fout << frequentItems.get(i)->get(j) << ", ";
+			}
+			fout << endl;
+		}
+		fout << endl;
+
 		candidates.clear();
 		//break; // DEBUG
 		k++;
 	} while (!candidates.isEmpty());
-	cout << timer.getTime() << endl;
+	std::cout << timer.getTime() << endl;
 	candidates.displayAll();
 	frequentItems.displayAll();
 	//frequentItems.deleteData();
 	// Pause
-	cout << "Done.";
+	fout.close();
+	std::cout << "Done.";
 	std::cin.get();
 }
