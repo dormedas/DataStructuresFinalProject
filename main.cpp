@@ -6,6 +6,35 @@
 
 #define MINSUP 0.0025
 
+bool checkApriori(Itemset* candidate, SetHolder* frequentItems)
+{
+	bool isFrequent = false;
+	int offset = 0;
+	for(int i = 0; i < candidate->size(); i++)
+	{
+		isFrequent = false;
+		Itemset* tempSet = new Itemset(2);
+		tempSet->add(candidate->get(0 + offset));
+		tempSet->add(candidate->get(i + 1 - offset)); //checks [0,1], [0,2], [1,2]
+		if(i >= 1)
+			offset = 1;
+		for(int j = 0; j < frequentItems->size(); j++)
+		{
+			if(tempSet->get(0) == frequentItems->get(j)->get(0) && tempSet->get(1) == frequentItems->get(j)->get(1))
+			{
+				isFrequent = true;
+				break;
+			}
+		}
+		delete tempSet;
+		if(!isFrequent)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 bool prune(SetHolder* tranArr, Itemset* kSet, int transactionCount)
 {
 	int count = 0;
@@ -169,6 +198,16 @@ int main()
 					i = candidates.remove(i);
 				}
 			}
+			candidates.displayAll();
+			cout << "Here:\n";
+			for(int i = 0; i < candidates.size(); i++)
+			{
+				if(checkApriori(candidates.get(i), &frequentItems))
+				{
+					i = candidates.remove(i);
+				}
+			}
+			cout << "Done:\n";
 			break;
 		}
 		for (int i = 0; i < candidates.size(); i++)
@@ -181,6 +220,8 @@ int main()
 	} while (!candidates.isEmpty());
 	cout << timer.getTime() << endl;
 	candidates.displayAll();
+	frequentItems.displayAll();
+	//frequentItems.deleteData();
 	// Pause
 	cout << "Done.";
 	std::cin.get();

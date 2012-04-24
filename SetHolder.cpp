@@ -21,7 +21,8 @@ void SetHolder::deleteData()
 {
 	for(int i = 0; i < mSize; i++)
 	{
-		delete [] mArray[i];
+		if(mArray[i] != NULL)
+			delete [] mArray[i];
 	}
 }
 
