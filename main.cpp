@@ -18,7 +18,7 @@ bool checkApriori(Itemset* candidate, SetHolder* frequentItems)
 		tempSet->add(candidate->get(i + 1 - offset)); //checks [0,1], [0,2], [1,2]
 		if(i >= 1)
 			offset = 1;
-		for(int j = 0; j < frequentItems->size(); j++)
+		for(int j = frequentItems->getSetStart(2); j < frequentItems->size(); j++)
 		{
 			if(tempSet->get(0) == frequentItems->get(j)->get(0) && tempSet->get(1) == frequentItems->get(j)->get(1))
 			{
@@ -199,8 +199,7 @@ int main()
 					i = candidates.remove(i);
 				}
 			}
-			candidates.displayAll();
-			std::cout << "Here:\n";
+			//candidates.displayAll();
 			for(int i = 0; i < candidates.size(); i++)
 			{
 				if(checkApriori(candidates.get(i), &frequentItems))
@@ -208,18 +207,20 @@ int main()
 					i = candidates.remove(i);
 				}
 			}
-			std::cout << "Done:\n";
-			break;
+			//std::cout << "Done:\n";
+			//break;
 		}
+		//frequentItems.clear();
 		for (int i = 0; i < candidates.size(); i++)
 		{
 			frequentItems.add(candidates.get(i));
 		}
+		double time = timer.getTime();
 
 		fout << "K = " << k << endl;
-		fout << "Total Datasets: " << frequentItems.size() << endl;
-		fout << "Time Taken: " << endl;
-		for(int i = 0; i < frequentItems.size(); i++)
+		fout << "Total Datasets: " << frequentItems.size() - frequentItems.getSetStart(k) << endl;
+		fout << "Time Taken: " << time << endl;
+		for(int i = frequentItems.getSetStart(k); i < frequentItems.size(); i++)
 		{
 			for(int j = 0; j < frequentItems.get(i)->size(); j++)
 			{
@@ -230,8 +231,11 @@ int main()
 		fout << endl;
 
 		candidates.clear();
+		if(k >= 3)
+			break;
 		//break; // DEBUG
 		k++;
+		timer.startClock();
 	} while (!candidates.isEmpty());
 	std::cout << timer.getTime() << endl;
 	candidates.displayAll();
