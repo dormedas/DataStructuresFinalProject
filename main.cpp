@@ -155,51 +155,55 @@ int main()
 			}
 			//break;
 		}
-		else if(k == 3)
+		else
 		{
-			std::cout << "Commencing 3-itemsets." << endl;
-			// THE MOST BULLSHIT SOLUTION KNOWN TO MAN.
-			int n = -1, 
-				m = -1, 
-				l = -1;
-			for(int i = frequentItems.getSetStart(2); i < frequentItems.size(); i++)
+			std::cout << "Commencing " << k << "-itemsets." << endl;
+			for(int i = frequentItems.getSetStart(k - 1); i <frequentItems.size(); i++)
 			{
-				n = frequentItems.get(i)->get(0);
-				m = frequentItems.get(i)->get(1);
-				//bool allGood = true;
-				for(int j = frequentItems.getSetStart(2); j < frequentItems.size(); j++)
+				if(i == 0) // Check if getSetStart returned nothing. This will never be 0
 				{
-					if(frequentItems.get(j)->get(0) == m)
+					break;
+				}
+				Itemset* tran1 = frequentItems.get(i);
+				for(int j = i + 1; j < frequentItems.size(); j++)
+				{
+					Itemset* tran2 = frequentItems.get(j);
+					bool allGood = true;
+					for(int kit = 0; kit < tran1->size() - 1; kit++)
 					{
-						l = frequentItems.get(j)->get(1);
-					}
-					if(l != -1)
-					{
-						for(int k = i; frequentItems.get(k)->get(0) == n; k++)
+						if(tran1->get(kit) != tran2->get(kit))
 						{
-							if(frequentItems.get(k)->get(1) == l)
-							{
-								Itemset* newSet = new Itemset(k);
-								newSet->add(n);
-								newSet->add(m);
-								newSet->add(l);
-								candidates.add(newSet);
-							}
+							allGood = false;
+							break;
 						}
 					}
-					l = -1;
+					if(allGood)
+					{
+						Itemset* newSet = new Itemset(k);
+						for(int it = 0; it < tran1->size() - 1; it++)
+						{
+							newSet->add(tran1->get(it));
+						}
+						newSet->add(tran1->get(tran1->size() - 1));
+						newSet->add(tran2->get(tran2->size() - 1));
+						candidates.add(newSet);
+					}
 				}
 			}
-			//break;//DEBUG
-			std::cout << "Pruning 3-itemsets." << endl;
+			std::cout << "Pruning " << k << "-itemsets." << endl;
 			for(int i = 0; i < candidates.size(); i++)
 			{
+				if(candidates.isEmpty())
+				{
+					break;
+				}
 				if(prune(&tranArr, candidates.get(i), transactionNum))
 				{
 					i = candidates.remove(i);
 				}
 			}
 			//candidates.displayAll();
+			/*
 			for(int i = 0; i < candidates.size(); i++)
 			{
 				if(checkApriori(candidates.get(i), &frequentItems))
@@ -207,8 +211,7 @@ int main()
 					i = candidates.remove(i);
 				}
 			}
-			//std::cout << "Done:\n";
-			//break;
+			*/
 		}
 		//frequentItems.clear();
 		for (int i = 0; i < candidates.size(); i++)
@@ -229,11 +232,12 @@ int main()
 			fout << endl;
 		}
 		fout << endl;
+		if(candidates.size() == 0)
+		{
+			break;
+		}
 
 		candidates.clear();
-		if(k >= 3)
-			break;
-		//break; // DEBUG
 		k++;
 		timer.startClock();
 	} while (!candidates.isEmpty());
