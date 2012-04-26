@@ -6,25 +6,51 @@
 
 #define MINSUP 0.0025
 
-bool checkApriori(Itemset* candidate, SetHolder* frequentItems)
+bool isEqual(Itemset* lhs, Itemset* rhs)
 {
-	bool isFrequent = false;
-	int offset = 0;
-	for(int i = 0; i < candidate->size(); i++)
+	if(lhs->size() != rhs->size())
+		return false;
+	bool equal = true;
+	for(int i = 0; i < lhs->size(); i++)
 	{
-		isFrequent = false;
-		Itemset* tempSet = new Itemset(2);
-		tempSet->add(candidate->get(0 + offset));
-		tempSet->add(candidate->get(i + 1 - offset)); //checks [0,1], [0,2], [1,2]
-		if(i >= 1)
-			offset = 1;
-		for(int j = frequentItems->getSetStart(2); j < frequentItems->size(); j++)
+		if(lhs->get(i) != rhs->get(i))
+			equal = false;
+	}
+	return equal;
+}
+
+bool checkApriori(Itemset* candidate, SetHolder* frequentItems, int k)
+{
+	bool* mask = new bool[k];
+	mask[0] = false;
+	for(short i = k - 1; i > 0; i--)
+	{
+		mask[i] = true;
+	}
+	short maskIndex = 0;
+	for(int i = 0; i < k; i++)
+	{
+		bool isFrequent = false;
+		Itemset* tempSet = new Itemset(k - 1);
+		for(int j = 0; j < k; j++)
 		{
-			if(tempSet->get(0) == frequentItems->get(j)->get(0) && tempSet->get(1) == frequentItems->get(j)->get(1))
+			if(mask[j] == true)
+			{
+				tempSet->add(candidate->get(j));
+			}
+		}
+		for(int j = frequentItems->getSetStart(k - 1); j < frequentItems->size(); j++)
+		{
+			if(isEqual(tempSet, frequentItems->get(j)))
 			{
 				isFrequent = true;
 				break;
 			}
+		}
+		mask[i] = true;
+		if(i + 1 < k)
+		{
+			mask[i + 1] = false;
 		}
 		delete tempSet;
 		if(!isFrequent)
@@ -202,16 +228,14 @@ int main()
 					i = candidates.remove(i);
 				}
 			}
-			//candidates.displayAll();
-			/*
+
 			for(int i = 0; i < candidates.size(); i++)
 			{
-				if(checkApriori(candidates.get(i), &frequentItems))
+				if(checkApriori(candidates.get(i), &frequentItems, k))
 				{
 					i = candidates.remove(i);
 				}
 			}
-			*/
 		}
 		//frequentItems.clear();
 		for (int i = 0; i < candidates.size(); i++)
