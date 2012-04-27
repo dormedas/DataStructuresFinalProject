@@ -20,11 +20,33 @@ Itemset::~Itemset()
 	delete [] mItemArray;
 }
 
-// 
+bool Itemset::inItemset(int item1, int item2)
+{
+	char count = 0;
+	for(int i = 0; i < mIndex; i++)
+	{
+		if(mItemArray[i] == item1)
+		{
+			count++;
+		}
+		if(mItemArray[i] == item2)
+		{
+			count++;
+		}
+	}
+	if(count == 2)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
 bool Itemset::inItemset(int item)
 {
-	for(int i = 0; i < mArrSize; i++)
+	for(int i = 0; i < mIndex; i++)
 	{
 		if(mItemArray[i] == item)
 			return true;

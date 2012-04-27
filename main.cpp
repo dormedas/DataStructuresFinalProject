@@ -71,12 +71,22 @@ bool prune(SetHolder* tranArr, Itemset* kSet, int transactionCount)
 		if(transaction != NULL)
 		{
 			bool allGood = true;
-			for(int j = 0; j < kSet->size(); j++)
+		//	if(kSet->size() == 2)
 			{
-				number = kSet->get(j);
-				if(!transaction->inItemset(kSet->get(j)))
+		//		if(!transaction->inItemset(kSet->get(0), kSet->get(1)))
 				{
-					allGood = false;
+		//			allGood = false;
+				}
+			}
+		//	else
+			{
+				for(int j = 0; j < kSet->size(); j++)
+				{
+					number = kSet->get(j);
+					if(!transaction->inItemset(kSet->get(j)))
+					{
+						allGood = false;
+					}
 				}
 			}
 			if(allGood)
@@ -179,7 +189,7 @@ int main()
 					i = candidates.remove(i);
 				}
 			}
-			//break;
+			//break; // DEBUG
 		}
 		else
 		{
@@ -260,7 +270,7 @@ int main()
 		{
 			break;
 		}
-
+		if(k == 2) break; // -- MASSIVE DEBUG
 		candidates.clear();
 		k++;
 		timer.startClock();

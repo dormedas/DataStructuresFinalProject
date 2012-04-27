@@ -6,6 +6,7 @@ public:
 	Itemset();
 	Itemset(int size);
 	~Itemset();
+	bool inItemset(int item1, int item2);
 	bool inItemset(int item);
 	bool isEmpty();
 	void add(int item);
